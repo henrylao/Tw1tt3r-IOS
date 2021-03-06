@@ -10,6 +10,8 @@ import UIKit
 
 class HomeTableViewController: UITableViewController {
     var TAG = "HomeTableViewController"
+    let timelineBaseUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+
     var numberOfTweets: Int!
     var tweetArray = [NSDictionary]()
     
@@ -24,10 +26,10 @@ class HomeTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadTweets()
+        initTweets()
         
         // bind function to user refresh action and start the ui anim + action func
-        refreshTweets.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
+        refreshTweets.addTarget(self, action: #selector(initTweets), for: .valueChanged)
         tableView.refreshControl = refreshTweets
         
     }
@@ -50,23 +52,58 @@ class HomeTableViewController: UITableViewController {
     }
     
     
-    @objc func loadTweets(){
-        let timelineBaseUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+    @objc func initTweets(){
+        self.numberOfTweets = 20
+        
         let payload = [
-            "count":10
+            "count":numberOfTweets
         ]
-        TwitterAPICaller.client?.getDictionariesRequest(url: timelineBaseUrl, parameters: payload, success: { (tweets : [NSDictionary]) in
+        TwitterAPICaller.client?.getDictionariesRequest(url: self.timelineBaseUrl, parameters: payload, success: { (tweets : [NSDictionary]) in
+            self.tweetArray.removeAll()
+            for t in tweets{
+                self.tweetArray.append(t)
+            }
+            print(self.TAG, "successfully initialized tweets")
+            self.tableView.reloadData()
+            print(self.TAG, "successfully reloaded cell data")
+            self.refreshTweets.endRefreshing()
+            print(self.TAG, "successfully ended refresh action")
+            
+        }, failure: { (Error)  in
+            print(Error)
+            print(self.TAG, "failed to initialize tweets")
+        })
+    }
+    
+    func loadNewTweets(){
+        numberOfTweets += 20
+        let payload = [
+            "count":numberOfTweets
+        ]
+        TwitterAPICaller.client?.getDictionariesRequest(url: self.timelineBaseUrl, parameters: payload, success: { (tweets : [NSDictionary]) in
             self.tweetArray.removeAll()
             for t in tweets{
                 self.tweetArray.append(t)
             }
             self.tableView.reloadData()
+            print(self.TAG, "successfully reloaded cell data")
             self.refreshTweets.endRefreshing()
+            print(self.TAG,"successfully ended refreshing")
             
         }, failure: {_  in
-            print(self.TAG + "failed to fetch tweets")
+            print(self.TAG,"failed to load more tweets")
         })
+
     }
+    
+    override func tableView(_ tableview: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
+        if indexPath.row + 1 == tweetArray.count {
+            print(TAG,"loaded more tweets")
+            loadNewTweets()
+        }
+    }
+    
+    
 
     // MARK: - Table view data source
 
