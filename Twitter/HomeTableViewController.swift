@@ -13,15 +13,22 @@ class HomeTableViewController: UITableViewController {
     var numberOfTweets: Int!
     var tweetArray = [NSDictionary]()
     
+    let refreshTweets = UIRefreshControl()
+    
     
     @IBAction func onLogoutClick(_ sender: Any) {
         TwitterAPICaller.client?.logout()
         self.dismiss(animated: true, completion: nil)
         UserDefaults.standard.set(false, forKey: "userLoggedIn")
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadTweets()
+        
+        // bind function to user refresh action and start the ui anim + action func
+        refreshTweets.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
+        tableView.refreshControl = refreshTweets
         
     }
     
@@ -43,7 +50,7 @@ class HomeTableViewController: UITableViewController {
     }
     
     
-    func loadTweets(){
+    @objc func loadTweets(){
         let timelineBaseUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
         let payload = [
             "count":10
@@ -54,6 +61,7 @@ class HomeTableViewController: UITableViewController {
                 self.tweetArray.append(t)
             }
             self.tableView.reloadData()
+            self.refreshTweets.endRefreshing()
             
         }, failure: {_  in
             print(self.TAG + "failed to fetch tweets")
