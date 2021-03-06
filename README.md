@@ -25,7 +25,7 @@ Here's a walkthrough of implemented user stories:
 
 <img src=
 "https://github.com/henrylao/Tw1tt3r-IOS/blob/master/docs/unit-3-stretch-goals-demo.gif"
-width=250><br>
+width=400><br>
 
 ## Notes
 - Creation of login screen by creating the layout from which frontend elements can be connected
