@@ -23,6 +23,18 @@ The following **bonus** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src="https://github.com/henrylao/Tw1tt3r/blob/stable/docs/portrait-tweet-clickable-username-02-16-21.gif" width=250><br>
+<img src=
+"https://github.com/henrylao/Tw1tt3r-IOS/blob/master/docs/persist-login-logout.gif
+"
+width=250><br>
 
-
+## Notes
+- Creation of login screen by creating the layout from which frontend elements can be connected
+to a dedicated class for controlling how the app responds
+    - Create storyboard scene
+    - Add relevant assets to scene
+    - Create dedicated class controller (cocoa touch)
+    - Link elems view ctrl + drag
+- Create logout handling
+- Caching user login info such that user stays logged in even after closign the app
+- Loading images and assets via a copy and paste after selected Assets.xcassets
