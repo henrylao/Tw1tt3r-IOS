@@ -24,7 +24,7 @@ The following **bonus** features are implemented:
 Here's a walkthrough of implemented user stories:
 
 <img src=
-"https://github.com/henrylao/Tw1tt3r-IOS/blob/master/docs/persist-login-logout.gif
+"https://github.com/henrylao/Tw1tt3r-IOS/blob/master/docs/unit-3-demo.gif
 "
 width=250><br>
 
