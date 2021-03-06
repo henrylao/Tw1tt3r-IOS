@@ -9,7 +9,11 @@
 import UIKit
 
 class HomeTableViewController: UITableViewController {
-
+    var TAG = "HomeTableViewController"
+    var numberOfTweets: Int!
+    var tweetArray = [NSDictionary]()
+    
+    
     @IBAction func onLogoutClick(_ sender: Any) {
         TwitterAPICaller.client?.logout()
         self.dismiss(animated: true, completion: nil)
@@ -17,21 +21,43 @@ class HomeTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadTweets()
         
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tweetCell", for: indexPath) as! TweetCellTableViewCell
-        cell.labelFullname.text = "Some Name"
-        cell.labelTweetBody.text = "Some content"
+        
+        let user = tweetArray[indexPath.row]["user"] as! NSDictionary
+        cell.labelFullname.text = user["name"] as? String
+        cell.labelTweetBody.text = self.tweetArray[indexPath.row]["text"] as? String
+        
+        let imageUrl = URL(string: (user["profile_image_url_https"] as? String)!)
+        let data = try? Data(contentsOf: imageUrl!)
+        
+        if let imageData = data {
+            cell.ivProfile.image = UIImage(data: imageData)
+        }
+        
         return cell
     }
     
     
     func loadTweets(){
-        let timelineBaseUrl + 
-        
-        TwitterAPICaller.client?.getDictionariesRequest(url: <#T##String#>, parameters: <#T##[String : Any]#>, success: <#T##([NSDictionary]) -> ()#>, failure: <#T##(Error) -> ()#>)
+        let timelineBaseUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+        let payload = [
+            "count":10
+        ]
+        TwitterAPICaller.client?.getDictionariesRequest(url: timelineBaseUrl, parameters: payload, success: { (tweets : [NSDictionary]) in
+            self.tweetArray.removeAll()
+            for t in tweets{
+                self.tweetArray.append(t)
+            }
+            self.tableView.reloadData()
+            
+        }, failure: {_  in
+            print(self.TAG + "failed to fetch tweets")
+        })
     }
 
     // MARK: - Table view data source
@@ -43,7 +69,7 @@ class HomeTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 5
+        return tweetArray.count;
     }
 
     /*
