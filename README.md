@@ -1,4 +1,4 @@
-# Project 3 - *Name of App Here*
+# Project 3 - *Tw1tt3r*
 
 **Name of your app** is a basic twitter app to read your tweets.
 
