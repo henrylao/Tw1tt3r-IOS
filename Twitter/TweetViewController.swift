@@ -10,9 +10,26 @@ import UIKit
 
 class TweetViewController: UIViewController {
 
+    @IBOutlet weak var tvBody: UITextView!
+    @IBAction func onCancelClick(_ sender: UIBarButtonItem) {
+    }
+    @IBAction func onTweetClick(_ sender: UIBarButtonItem) {
+    
+        if (!tvBody.text.isEmpty){
+            TwitterAPICaller.client?.postTweet(tweetString: tvBody.text, success: {
+                self.dismiss(animated: true, completion: nil)
+            }, failure: { error in
+                print("Error posting tweet \(error)")
+                self.dismiss(animated: true, completion: nil)
+            })
+        }
+        else{
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tvBody.becomeFirstResponder()
         // Do any additional setup after loading the view.
     }
     

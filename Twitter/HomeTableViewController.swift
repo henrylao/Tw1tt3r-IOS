@@ -24,6 +24,11 @@ class HomeTableViewController: UITableViewController {
         UserDefaults.standard.set(false, forKey: "userLoggedIn")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadNewTweets()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initTweets()
