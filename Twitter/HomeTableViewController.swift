@@ -36,6 +36,8 @@ class HomeTableViewController: UITableViewController {
         // bind function to user refresh action and start the ui anim + action func
         refreshTweets.addTarget(self, action: #selector(initTweets), for: .valueChanged)
         tableView.refreshControl = refreshTweets
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.estimatedRowHeight = 150
         
     }
     
@@ -53,6 +55,8 @@ class HomeTableViewController: UITableViewController {
             cell.ivProfile.image = UIImage(data: imageData)
         }
         
+        cell.setFavorite(isLiked: tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
         return cell
     }
     
